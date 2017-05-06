@@ -68,3 +68,17 @@ class TestSeasons:
         """
         date = datetime(2017, 3,20, 1, 1, 1)
         assert seasonset.get_season(date) == expected
+
+
+class TestLocation:
+
+    @pytest.mark.parametrize(('lat', 'lng', 'expected'), [
+        (51.507351, -0.127758, 'northern'),  # London
+        (68.958524, 33.08266, 'northern'),  # Murmansk
+        (-34.603684, -58.381559, 'southern'),  # Buenos Aires
+        (-37.813628, 144.963058, 'southern'),  # Melbourne
+        (0.0, -109.20, 'southern'),  #Pontianak
+    ])
+    def test_hemisphere(self, lat, lng, expected):
+        loc = seasons.Location(lat, lng)
+        assert loc.hemisphere == expected

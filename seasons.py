@@ -43,7 +43,7 @@ class Location:
 
     @property
     def hemisphere(self):
-        if latitude > 0:
+        if self.lat > 0:
             return "northern"
         return "southern"
 
