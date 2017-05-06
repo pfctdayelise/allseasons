@@ -3,6 +3,18 @@
 import ephem
 
 
+class Location:
+    def __init__(self, lat, lng):
+        self.lat = lat
+        self.lng = lng
+
+    @property
+    def hemisphere(self):
+        if self.lat > 0:
+            return "northern"
+        return "southern"
+
+
 class Season:
     def __init__(self, name, valid_for_date):
         """
@@ -34,18 +46,6 @@ class Seasons:
         for season in self.seasons:
             if season.valid_for(date):
                 return season.name
-
-
-class Location:
-    def __init__(self, lat, lng):
-        self.lat = lat
-        self.lng = lng
-
-    @property
-    def hemisphere(self):
-        if self.lat > 0:
-            return "northern"
-        return "southern"
 
 
 def astronomical_dates(year):
