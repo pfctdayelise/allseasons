@@ -31,25 +31,40 @@ def test_between_two_values():
     assert not seasons.between(july, 'dec', None)
 
 
-@pytest.mark.parametrize(('seasonset', 'expected'), [
-    (seasons.nh_met, 'summer'),
-    (seasons.nh_ast, 'summer'),
-    (seasons.sh_met, 'winter'),
-    (seasons.sh_ast, 'winter'),
-])
-def test_get_season_3_july(seasonset, expected):
-    date = datetime(1983, 7, 3, 1, 1, 1)
-    assert seasonset.get_season(date) == expected
+class TestSeason:
+
+    def test_valid_for_southern_meteo_3_july(self):
+        date = datetime(1983, 7, 3, 1, 1, 1)
+        result = {(s.name, s.valid_for(date))
+                   for s in seasons.southern_meteo.seasons}
+        expected = {('spring', False),
+                    ('summer', False),
+                    ('autumn', False),
+                    ('winter', True)
+        }
+        assert result == expected
 
 
-@pytest.mark.parametrize(('seasonset', 'expected'), [
-    (seasons.nh_met, 'spring'),
-    (seasons.nh_ast, 'winter'),
-    (seasons.sh_met, 'autumn'),
-    (seasons.sh_ast, 'summer'),
-])
-def test_get_season_20_march(seasonset, expected):
-    """This date falls in between the astronomical and meteorological seasons
-    """
-    date = datetime(2017, 3,20, 1, 1, 1)
-    assert seasonset.get_season(date) == expected
+class TestSeasons:
+
+    @pytest.mark.parametrize(('seasonset', 'expected'), [
+        (seasons.northern_meteo, 'summer'),
+        (seasons.northern_astro, 'summer'),
+        (seasons.southern_meteo, 'winter'),
+        (seasons.southern_astro, 'winter'),
+    ])
+    def test_get_season_3_july(self, seasonset, expected):
+        date = datetime(1983, 7, 3, 1, 1, 1)
+        assert seasonset.get_season(date) == expected
+
+    @pytest.mark.parametrize(('seasonset', 'expected'), [
+        (seasons.northern_meteo, 'spring'),
+        (seasons.northern_astro, 'winter'),
+        (seasons.southern_meteo, 'autumn'),
+        (seasons.southern_astro, 'summer'),
+    ])
+    def test_get_season_20_march(self, seasonset, expected):
+        """This date falls between the astronomical and meteorological seasons
+        """
+        date = datetime(2017, 3,20, 1, 1, 1)
+        assert seasonset.get_season(date) == expected

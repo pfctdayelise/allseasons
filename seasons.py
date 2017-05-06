@@ -36,8 +36,16 @@ class Seasons:
                 return season.name
 
 
-def hemisphere(loc):
-    pass
+class Location:
+    def __init__(self, lat, lng):
+        self.lat = lat
+        self.lng = lng
+
+    @property
+    def hemisphere(self):
+        if latitude > 0:
+            return "northern"
+        return "southern"
 
 
 def astronomical_dates(year):
@@ -56,32 +64,40 @@ def between(date, first_date, second_date):
     return c1 and c2
 
 
-nh_met = Seasons('meteorological', [
+northern_meteo = Seasons('meteorological', [
     Season('spring', lambda d: 3 <= d.month < 6),
     Season('summer', lambda d: 6 <= d.month < 9),
     Season('autumn', lambda d: 9 <= d.month < 12),
     Season('winter', lambda d: d.month == 12 or d.month < 3)],
-    lambda loc: hemisphere(loc) == 'northern')
+    lambda loc: loc.hemisphere == 'northern')
 
-sh_met = Seasons('meteorological', [
+southern_meteo = Seasons('meteorological', [
     Season('spring', lambda d: 9 <= d.month < 12),
     Season('summer', lambda d: d.month == 12 or d.month < 3),
     Season('autumn', lambda d: 3 <= d.month < 6),
     Season('winter', lambda d: 6 <= d.month < 9)],
-    lambda loc: hemisphere(loc) == 'southern')
+    lambda loc: loc.hemisphere == 'southern')
 
-nh_ast = Seasons('astronomical', [
+northern_astro = Seasons('astronomical', [
     Season('spring', lambda d: between(d, 'march', 'june')),
     Season('summer', lambda d: between(d, 'june', 'sept')),
     Season('autumn', lambda d: between(d, 'sept', 'dec')),
     Season('winter',
            lambda d: between(d, None, 'march') or between(d, 'dec', None))],
-    lambda loc: hemisphere(loc) == 'northern')
+    lambda loc: loc.hemisphere == 'northern')
     
-sh_ast = Seasons('astronomical', [
+southern_astro = Seasons('astronomical', [
     Season('spring', lambda d: between(d, 'sept', 'dec')),
     Season('summer',
            lambda d: between(d, None, 'march') or between(d, 'dec', None)),
     Season('autumn', lambda d: between(d, 'march', 'june')),
     Season('winter', lambda d: between(d, 'june', 'sept'))],
-    lambda loc: hemisphere(loc) == 'southern')
+    lambda loc: loc.hemisphere == 'southern')
+
+
+season_sets = (
+    northern_meteo,
+    southern_meteo,
+    northern_astro,
+    southern_astro,
+    )
