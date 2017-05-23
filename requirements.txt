@@ -1,3 +1,9 @@
+click==6.7
+decorator==4.0.11
+geocoder==1.22.5
 py==1.4.33
 pyephem==3.7.6.0
 pytest==3.0.7
+ratelim==0.1.6
+requests==2.14.2
+six==1.10.0
