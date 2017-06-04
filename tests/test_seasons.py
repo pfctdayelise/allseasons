@@ -21,6 +21,17 @@ class TestLocation:
         loc = seasons.Location(lat, lng)
         assert loc.hemisphere == expected
 
+    @pytest.mark.parametrize(('lat', 'lng', 'expected'), [
+        (*LONDON, 'UK'),
+        (*MURMANSK, 'Russian Federation'),
+        (*BUENOSAIRES, 'Argentina'),
+        (*MELBOURNE, 'Australia'),
+        (*PONTIANAK, None),  # seems rough
+    ])
+    def test_country(self, lat, lng, expected):
+        loc = seasons.Location(lat, lng)
+        assert loc.country == expected
+
 
 class TestSeason:
     def test_valid_for(self):
