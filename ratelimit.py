@@ -11,7 +11,7 @@ class NomatimRateLimitCache:
         self.last_call = time.time() - 100
 
     def __call__(self, *args):
-        return cache.get(args, self._really_call(args))
+        return self.cache.get(args, self._really_call(args))
 
     def _really_call(self, args):
         since_last_call = time.time() - self.last_call

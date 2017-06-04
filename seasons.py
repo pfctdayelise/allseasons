@@ -42,7 +42,7 @@ class Season:
         return 'Season({})'.format(self.name)
 
 
-class Seasons:
+class Seasonset:
     def __init__(self, name, seasons, valid_for_loc):
         """
         @param name: a descriptive name for this set of seasons
@@ -54,7 +54,7 @@ class Seasons:
         self.valid_for = valid_for_loc
 
     def __str__(self):
-        return 'Seasons({})'.format(self.name)
+        return 'Seasonset({})'.format(self.name)
 
     def get_season(self, date):
         for season in self.seasons:
@@ -78,21 +78,21 @@ def between(date, first_date, second_date):
     return c1 and c2
 
 
-northern_meteo = Seasons('meteorological', [
+northern_meteo = Seasonset('meteorological', [
     Season('spring', lambda d: 3 <= d.month < 6),
     Season('summer', lambda d: 6 <= d.month < 9),
     Season('autumn', lambda d: 9 <= d.month < 12),
     Season('winter', lambda d: d.month == 12 or d.month < 3)],
     lambda loc: loc.hemisphere == 'northern')
 
-southern_meteo = Seasons('meteorological', [
+southern_meteo = Seasonset('meteorological', [
     Season('spring', lambda d: 9 <= d.month < 12),
     Season('summer', lambda d: d.month == 12 or d.month < 3),
     Season('autumn', lambda d: 3 <= d.month < 6),
     Season('winter', lambda d: 6 <= d.month < 9)],
     lambda loc: loc.hemisphere == 'southern')
 
-northern_astro = Seasons('astronomical', [
+northern_astro = Seasonset('astronomical', [
     Season('spring', lambda d: between(d, 'march', 'june')),
     Season('summer', lambda d: between(d, 'june', 'sept')),
     Season('autumn', lambda d: between(d, 'sept', 'dec')),
@@ -100,7 +100,7 @@ northern_astro = Seasons('astronomical', [
            lambda d: between(d, None, 'march') or between(d, 'dec', None))],
     lambda loc: loc.hemisphere == 'northern')
     
-southern_astro = Seasons('astronomical', [
+southern_astro = Seasonset('astronomical', [
     Season('spring', lambda d: between(d, 'sept', 'dec')),
     Season('summer',
            lambda d: between(d, None, 'march') or between(d, 'dec', None)),

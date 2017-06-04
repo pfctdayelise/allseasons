@@ -48,7 +48,7 @@ class TestSeason:
         assert result == expected
 
 
-class TestSeasons:
+class TestSeasonset:
     @pytest.mark.parametrize(('seasonset', 'expected'), [
         (seasons.northern_meteo, 'summer'),
         (seasons.northern_astro, 'summer'),
