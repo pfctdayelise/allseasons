@@ -56,8 +56,11 @@ class Seasonset:
     def __str__(self):
         return 'Seasonset({})'.format(self.name)
 
+    def __iter__(self):
+        return iter(self.seasons)
+
     def get_season(self, date):
-        for season in self.seasons:
+        for season in self:
             if season.valid_for(date):
                 return season.name
 
@@ -115,3 +118,7 @@ season_sets = (
     northern_astro,
     southern_astro,
     )
+
+
+def get_valid_seasonsets(location):
+    return [ss for ss in season_sets if ss.valid_for(location)]
