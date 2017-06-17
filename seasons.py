@@ -4,6 +4,7 @@ import ephem
 import geocoder
 from functools import partial
 from ratelimit import NomatimRateLimitCache
+from datetime import date, datetime
 
 
 location_cache = NomatimRateLimitCache(partial(geocoder.osm, method='reverse'))
@@ -59,9 +60,9 @@ class Seasonset:
     def __iter__(self):
         return iter(self.seasons)
 
-    def get_season(self, date):
+    def get_season(self, ddate):
         for season in self:
-            if season.valid_for(date):
+            if season.valid_for(ddate):
                 return season.name
 
 
@@ -74,10 +75,24 @@ def astronomical_dates(year):
     return dict(march=march, june=june, sept=sept, dec=dec)
 
 
-def between(date, first_date, second_date):
-    eqxs = astronomical_dates(date.year)
-    c1 = eqxs[first_date] <= date if first_date else True
-    c2 = date < eqxs[second_date] if second_date else True
+def between_equinoxes(ddate, first_date, second_date):
+    eqxs = astronomical_dates(ddate.year)
+    c1 = eqxs[first_date] <= ddate if first_date else True
+    c2 = ddate < eqxs[second_date] if second_date else True
+    return c1 and c2
+
+
+def between_dates(ddate, start, end):
+    '''
+    @param date: datetime object
+    @param start: (int, int) representing (month, day) | None
+    @param end: (int, int) representing (month, day) | None
+    @return: Boolean
+
+    example: (3, 15) represents the 15th March
+    '''
+    c1 = date(ddate.year, *start) <= ddate.date() if start else True
+    c2 = ddate.date() < date(ddate.year, *end) if end else True
     return c1 and c2
 
 
@@ -96,20 +111,31 @@ southern_meteo = Seasonset('meteorological', [
     lambda loc: loc.hemisphere == 'southern')
 
 northern_astro = Seasonset('astronomical', [
-    Season('spring', lambda d: between(d, 'march', 'june')),
-    Season('summer', lambda d: between(d, 'june', 'sept')),
-    Season('autumn', lambda d: between(d, 'sept', 'dec')),
+    Season('spring', lambda d: between_equinoxes(d, 'march', 'june')),
+    Season('summer', lambda d: between_equinoxes(d, 'june', 'sept')),
+    Season('autumn', lambda d: between_equinoxes(d, 'sept', 'dec')),
     Season('winter',
-           lambda d: between(d, None, 'march') or between(d, 'dec', None))],
+           lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None))],
     lambda loc: loc.hemisphere == 'northern')
     
 southern_astro = Seasonset('astronomical', [
-    Season('spring', lambda d: between(d, 'sept', 'dec')),
+    Season('spring', lambda d: between_equinoxes(d, 'sept', 'dec')),
     Season('summer',
-           lambda d: between(d, None, 'march') or between(d, 'dec', None)),
-    Season('autumn', lambda d: between(d, 'march', 'june')),
-    Season('winter', lambda d: between(d, 'june', 'sept'))],
+           lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None)),
+    Season('autumn', lambda d: between_equinoxes(d, 'march', 'june')),
+    Season('winter', lambda d: between_equinoxes(d, 'june', 'sept'))],
     lambda loc: loc.hemisphere == 'southern')
+
+
+hindu_calendar = Seasonset('Hindu calendar', [
+    Season('Vasanta', lambda d: between_dates(d, (3, 15), (5, 15))),
+    Season('Greeshma', lambda d: between_dates(d, (5, 15), (7, 15))),
+    Season('Varsha', lambda d: between_dates(d, (7, 15), (9, 15))),
+    Season('Sharad', lambda d: between_dates(d, (9, 15), (11, 15))),
+    Season('Hemanta', lambda d: between_dates(d, (11, 15), None) or between_dates(d, None, (1, 15))),
+    Season('Shishira', lambda d: between_dates(d, (1, 15), (3, 15))),
+    ],
+                           lambda loc: loc.country == 'India')
 
 
 season_sets = (
@@ -117,6 +143,7 @@ season_sets = (
     southern_meteo,
     northern_astro,
     southern_astro,
+    hindu_calendar,
     )
 
 

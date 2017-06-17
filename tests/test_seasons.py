@@ -91,22 +91,28 @@ def test_astronomical_dates():
     assert result == expected
 
 
-def test_between_two_values():
+def test_between_equinoxes():
     dates = seasons.astronomical_dates(2017)
     july = datetime(2017, 7, 3, 1, 1, 1)
-    assert seasons.between(july, 'march', 'sept')
-    assert seasons.between(july, 'march', 'dec')
-    assert seasons.between(july, 'june', 'sept')
-    assert seasons.between(july, 'june', 'dec')
-    assert seasons.between(july, 'march', None)
-    assert seasons.between(july, 'june', None)
-    assert seasons.between(july, None, 'sept')
-    assert seasons.between(july, None, 'dec')
-    assert not seasons.between(july, 'march', 'june')
-    assert not seasons.between(july, 'sept', 'dec')
-    assert not seasons.between(july, None, 'march')
-    assert not seasons.between(july, None, 'june')
-    assert not seasons.between(july, 'sept', None)
-    assert not seasons.between(july, 'dec', None)
+    assert seasons.between_equinoxes(july, 'march', 'sept')
+    assert seasons.between_equinoxes(july, 'march', 'dec')
+    assert seasons.between_equinoxes(july, 'june', 'sept')
+    assert seasons.between_equinoxes(july, 'june', 'dec')
+    assert seasons.between_equinoxes(july, 'march', None)
+    assert seasons.between_equinoxes(july, 'june', None)
+    assert seasons.between_equinoxes(july, None, 'sept')
+    assert seasons.between_equinoxes(july, None, 'dec')
+    assert not seasons.between_equinoxes(july, 'march', 'june')
+    assert not seasons.between_equinoxes(july, 'sept', 'dec')
+    assert not seasons.between_equinoxes(july, None, 'march')
+    assert not seasons.between_equinoxes(july, None, 'june')
+    assert not seasons.between_equinoxes(july, 'sept', None)
+    assert not seasons.between_equinoxes(july, 'dec', None)
 
 
+def test_between_dates():
+    july = datetime(2017, 7, 3, 1, 1, 1)
+    assert seasons.between_dates(july, (7, 3), (7, 4))
+    assert not seasons.between_dates(july, (7, 2), (7, 3))
+    assert seasons.between_dates(july, (7, 3), None)
+    assert seasons.between_dates(july, None, (7, 4))
