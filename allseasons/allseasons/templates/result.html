@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Result{% endblock %}
+
+{% block content %}
+
+
+<h1>Result!</h1>
+
+<p>
+Name:  {{event.name}}
+</p>
+<p>
+Date: {{event.date}}
+</p>
+<p>
+Location: {{event.location}}
+</p>
+
+
+{% endblock content %}

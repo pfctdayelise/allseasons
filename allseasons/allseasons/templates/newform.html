@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block title %}Form{% endblock %}
+
+{% block content %}
+
+
+<h1>Form!</h1>
+
+{# Display a form #}
+
+<form action="" method="post" class="form">
+    {% csrf_token %}
+<!--    {% bootstrap_form form %} -->
+    {{ form.media }}
+    {{ form.as_p }}
+
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Submit
+        </button>
+    {% endbuttons %}
+</form>
+
+
+{% endblock content %}

@@ -46,21 +46,6 @@
       {{content}}
       {% endblock content %}
 
-{# Display a form #}
-      
-<form action="/url/to/submit/" method="post" class="form">
-    {% csrf_token %}
-<!--    {% bootstrap_form form %} -->
-    {{ form.media }}
-    {{ form.as_p }}
-
-    {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Submit
-        </button>
-    {% endbuttons %}
-</form>
-
     </div> <!-- /container -->
 
 
