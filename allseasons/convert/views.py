@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import PlaceForm
+from .forms import EventForm
 
 
 def index_old(request):
@@ -10,5 +10,5 @@ def index_old(request):
 
 
 def index(request):
-    form = PlaceForm()
+    form = EventForm()
     return render(request, 'base.html', {'form': form})
