@@ -3,6 +3,11 @@ from django.forms.extras.widgets import SelectDateWidget
 from .models import EventOfInterest
 
 
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = EventOfInterest
+        fields = ('name', 'date', 'location', 'seasonset')
+
 
 class EventForm1(forms.ModelForm):
     class Meta:
@@ -17,3 +22,6 @@ class EventForm2(forms.ModelForm):
     class Meta:
         model = EventOfInterest
         fields = ('seasonset', )
+        widgets = {
+            'seasonset': forms.RadioSelect,
+        }
