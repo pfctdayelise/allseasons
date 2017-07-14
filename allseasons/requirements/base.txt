@@ -9,3 +9,5 @@ django-model-utils
 django-bootstrap3
 
 django-geoposition==0.3.1  # pip install https://github.com/philippbosch/django-geoposition/archive/django-1.11.zip
+
+django-formtools

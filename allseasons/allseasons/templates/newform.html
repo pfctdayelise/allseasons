@@ -11,15 +11,35 @@
 
 {# Display a form #}
 
-<form action="" method="post" class="form">
-    {% csrf_token %}
-<!--    {% bootstrap_form form %} -->
-    {{ form.media }}
-    {{ form.as_p }}
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form action="" method="post" class="form">{% csrf_token %}
+
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+  {% for form in wizard.form.forms %}
+        {% bootstrap_form form %} 
+        {{ form.media }}
+    {% endfor %}
+        {% else %}
+    {% bootstrap_form wizard.form %} 
+    {{ wizard.form.media }}
+
+{% endif %}
+
+
+
+
 
     {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Submit
+
+<button type="submit" class="btn btn-primary">
+  
+  {% if wizard.steps.prev %}
+  {% bootstrap_icon "star" %} Submit
+  {% else %}
+  Next
+  {% endif %}
         </button>
     {% endbuttons %}
 </form>
