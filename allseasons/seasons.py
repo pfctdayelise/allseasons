@@ -68,15 +68,17 @@ class Seasonset:
 
 def astronomical_dates(year):
     y = str(year)
-    march = ephem.next_spring_equinox(y).datetime()
-    june = ephem.next_summer_solstice(y).datetime()
-    sept = ephem.next_autumn_equinox(y).datetime()
-    dec = ephem.next_winter_solstice(y).datetime()
+    march = ephem.next_spring_equinox(y).datetime().date()
+    june = ephem.next_summer_solstice(y).datetime().date()
+    sept = ephem.next_autumn_equinox(y).datetime().date()
+    dec = ephem.next_winter_solstice(y).datetime().date()
     return dict(march=march, june=june, sept=sept, dec=dec)
 
 
 def between_equinoxes(ddate, first_date, second_date):
     eqxs = astronomical_dates(ddate.year)
+    print('eqxs=', eqxs)
+    print('type=', type(ddate))
     c1 = eqxs[first_date] <= ddate if first_date else True
     c2 = ddate < eqxs[second_date] if second_date else True
     return c1 and c2
@@ -84,33 +86,33 @@ def between_equinoxes(ddate, first_date, second_date):
 
 def between_dates(ddate, start, end):
     '''
-    @param date: datetime object
+    @param date: datetime.date object
     @param start: (int, int) representing (month, day) | None
     @param end: (int, int) representing (month, day) | None
     @return: Boolean
 
     example: (3, 15) represents the 15th March
     '''
-    c1 = date(ddate.year, *start) <= ddate.date() if start else True
-    c2 = ddate.date() < date(ddate.year, *end) if end else True
+    c1 = date(ddate.year, *start) <= ddate if start else True
+    c2 = ddate < date(ddate.year, *end) if end else True
     return c1 and c2
 
 
-northern_meteo = Seasonset('meteorological', [
+northern_meteo = Seasonset('n meteorological', [
     Season('spring', lambda d: 3 <= d.month < 6),
     Season('summer', lambda d: 6 <= d.month < 9),
     Season('autumn', lambda d: 9 <= d.month < 12),
     Season('winter', lambda d: d.month == 12 or d.month < 3)],
     lambda loc: loc.hemisphere == 'northern')
 
-southern_meteo = Seasonset('meteorological', [
+southern_meteo = Seasonset('s meteorological', [
     Season('spring', lambda d: 9 <= d.month < 12),
     Season('summer', lambda d: d.month == 12 or d.month < 3),
     Season('autumn', lambda d: 3 <= d.month < 6),
     Season('winter', lambda d: 6 <= d.month < 9)],
     lambda loc: loc.hemisphere == 'southern')
 
-northern_astro = Seasonset('astronomical', [
+northern_astro = Seasonset('n astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'march', 'june')),
     Season('summer', lambda d: between_equinoxes(d, 'june', 'sept')),
     Season('autumn', lambda d: between_equinoxes(d, 'sept', 'dec')),
@@ -118,7 +120,7 @@ northern_astro = Seasonset('astronomical', [
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None))],
     lambda loc: loc.hemisphere == 'northern')
     
-southern_astro = Seasonset('astronomical', [
+southern_astro = Seasonset('s astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'sept', 'dec')),
     Season('summer',
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None)),

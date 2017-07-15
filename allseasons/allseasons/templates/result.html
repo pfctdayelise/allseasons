@@ -9,15 +9,14 @@
 
 <h1>Result!</h1>
 
-<p>
-Name:  {{event.name}}
-</p>
-<p>
-Date: {{event.date}}
-</p>
-<p>
-Location: {{event.location}}
-</p>
+<div>
+  The event of {{event.name}},
+  which occurred on {{event.date}}
+  at {{event.location}},
+  according to the {{event.seasonset}} seasons
+  fell during the season of <b>{{event.season}}</b>!
+</div>
+
 
 
 {% endblock content %}

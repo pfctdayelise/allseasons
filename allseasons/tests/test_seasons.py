@@ -1,6 +1,6 @@
 import seasons
 import pytest
-from datetime import datetime
+import datetime
 
 LONDON = (51.507351, -0.127758)
 MURMANSK = (68.958524, 33.08266)
@@ -37,7 +37,7 @@ class TestSeason:
     def test_valid_for(self):
         """For southern_meteo, 3 july
         """
-        july = datetime(1983, 7, 3, 1, 1, 1)
+        july = datetime.date(1983, 7, 3)
         result = {(s.name, s.valid_for(july))
                    for s in seasons.southern_meteo.seasons}
         expected = {('spring', False),
@@ -56,7 +56,7 @@ class TestSeasonset:
         (seasons.southern_astro, 'winter'),
     ])
     def test_get_season_3_july(self, seasonset, expected):
-        date = datetime(1983, 7, 3, 1, 1, 1)
+        date = datetime.date(1983, 7, 3)
         assert seasonset.get_season(date) == expected
 
     @pytest.mark.parametrize(('seasonset', 'expected'), [
@@ -65,10 +65,10 @@ class TestSeasonset:
         (seasons.southern_meteo, 'autumn'),
         (seasons.southern_astro, 'summer'),
     ])
-    def test_get_season_20_march(self, seasonset, expected):
+    def test_get_season_19_march(self, seasonset, expected):
         """This date falls between the astronomical and meteorological seasons
         """
-        date = datetime(2017, 3,20, 1, 1, 1)
+        date = datetime.date(2017, 3, 19)
         assert seasonset.get_season(date) == expected
 
     @pytest.mark.parametrize(('loc', 'seasonset', 'expected'), [
@@ -84,16 +84,16 @@ class TestSeasonset:
 
 def test_astronomical_dates():
     result = seasons.astronomical_dates(2017)
-    expected = {'dec': datetime(2017, 12, 21, 16, 27, 48, 281359),
-                'june': datetime(2017, 6, 21, 4, 24, 17, 882888),
-                'sept': datetime(2017, 9, 22, 20, 1, 41, 290341),
-                'march': datetime(2017, 3, 20, 10, 28, 37, 516239)}
+    expected = {'dec': datetime.date(2017, 12, 21),
+                'june': datetime.date(2017, 6, 21),
+                'sept': datetime.date(2017, 9, 22),
+                'march': datetime.date(2017, 3, 20)}
     assert result == expected
 
 
 def test_between_equinoxes():
     dates = seasons.astronomical_dates(2017)
-    july = datetime(2017, 7, 3, 1, 1, 1)
+    july = datetime.date(2017, 7, 3)
     assert seasons.between_equinoxes(july, 'march', 'sept')
     assert seasons.between_equinoxes(july, 'march', 'dec')
     assert seasons.between_equinoxes(july, 'june', 'sept')
@@ -111,7 +111,7 @@ def test_between_equinoxes():
 
 
 def test_between_dates():
-    july = datetime(2017, 7, 3, 1, 1, 1)
+    july = datetime.date(2017, 7, 3)
     assert seasons.between_dates(july, (7, 3), (7, 4))
     assert not seasons.between_dates(july, (7, 2), (7, 3))
     assert seasons.between_dates(july, (7, 3), None)

@@ -5,6 +5,7 @@ from .models import EventOfInterest
 
 def result(request, pk):
     event = get_object_or_404(EventOfInterest, pk=pk)
+    print(event)
     return render(request, 'result.html', {'event': event})
 
 
@@ -24,6 +25,7 @@ def index(request):
 from django.http import HttpResponseRedirect
 from formtools.wizard.views import SessionWizardView
 from django import forms
+from geoposition.fields import GeopositionField
 import seasons
 
 
@@ -50,9 +52,7 @@ class EventWizard(SessionWizardView):
     def done(self, form_list, **kwargs):
         assert all(form.is_valid() for form in form_list)
         form_data = self.get_all_cleaned_data()
-        eventform = EventForm(form_data)
-        if not eventform.is_valid():
-            print(form_data)
-            raise Exception('wtf')
-        event = eventform.save()
+        form_data['location'] = '{}, {}'.format(*[l for l in form_data['location']])
+        event = EventOfInterest(**form_data)
+        event.save()
         return redirect('result', pk=event.pk)
