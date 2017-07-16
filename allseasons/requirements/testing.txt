@@ -2,3 +2,6 @@
 
 mock
 model-mommy
+pytest
+pytest-splinter
+pytest-bdd
