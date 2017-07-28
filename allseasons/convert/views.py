@@ -1,32 +1,41 @@
+import datetime
+from formtools.wizard.views import SessionWizardView
+from django import forms
+import seasons
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import EventForm, EventForm1, EventForm2
-from .models import EventOfInterest
+from .forms import EventForm, EventForm1, EventForm2, MessageForm
+from .models import EventOfInterest, Message
+from django.core.mail import send_mail
+
+
+def send(request, pk):
+    message = get_object_or_404(Message, pk=pk)
+    if message.mtype == 'email':
+        subj = 'Some important season information!'
+        body = message.event.format_plaintext()
+        send_mail(subj, body, message.sender, [message.receiver], fail_silently=False)
+        # Possible errors raised here:
+        #    ConnectionRefusedError
+        # 
+        message.date = datetime.datetime.utcnow()
+        message.save()
+
+    return render(request, 'send.html', {'message': message})
 
 
 def result(request, pk):
     event = get_object_or_404(EventOfInterest, pk=pk)
-    print(event)
-    return render(request, 'result.html', {'event': event})
 
-
-def index(request):
     if request.method == 'POST':
-        form = EventForm1(request.POST)
+        form = MessageForm(request.POST)
         if form.is_valid():
-            event = form.save(commit=False)
-            event.save()
-            return redirect('result', pk=event.pk)
+            message = form.save(commit=False)
+            message.event = event
+            message.save()
+            return redirect('send', pk=message.pk)
 
-    form = EventForm1()
-    return render(request, 'newform.html', {'form': form})
-
-
-
-from django.http import HttpResponseRedirect
-from formtools.wizard.views import SessionWizardView
-from django import forms
-from geoposition.fields import GeopositionField
-import seasons
+    form = MessageForm()
+    return render(request, 'result.html', {'event': event, 'form': form})
 
 
 class EventWizard(SessionWizardView):

@@ -130,6 +130,13 @@ AUTH_PASSWORD_VALIDATORS = [
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCr1wwhDOI7UGP6QOOAGjrLwlBfvi-7y_M'
 
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'sendgrid_username'
+EMAIL_HOST_PASSWORD = 'sendgrid_password'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
 # .local.py overrides all the common settings.
 try:
     from .local import *  # noqa

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.extras.widgets import SelectDateWidget
-from .models import EventOfInterest
+from .models import EventOfInterest, Message
 
 
 class EventForm(forms.ModelForm):
@@ -24,4 +24,13 @@ class EventForm2(forms.ModelForm):
         fields = ('seasonset', )
         widgets = {
             'seasonset': forms.RadioSelect,
+        }
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ('sender', 'receiver', 'mtype')
+        widgets = {
+            'mtype': forms.RadioSelect,
         }

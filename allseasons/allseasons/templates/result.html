@@ -7,16 +7,28 @@
 {% block content %}
 
 
-<h1>Result!</h1>
+<h1>Your seasonal info...</h1>
 
 <div id="result">
-  The event of {{event.name}},
-  which occurred on {{event.date}}
-  at {{event.location}},
-  according to the {{event.seasonset}} seasons
-  fell during the season of <b>{{event.season}}</b>!
+  {% autoescape off %}
+  {{event.format_html }}
+  {% endautoescape %}
 </div>
 
 
+<h3>Share with a friend!</h3>
+<div>
+<form action="" method="post" class="form">{% csrf_token %}
+        {% bootstrap_form form %} 
+        {{ form.media }}
+
+    {% buttons %}
+
+<button type="submit" class="btn btn-primary">
+  {% bootstrap_icon "star" %} Submit
+        </button>
+    {% endbuttons %}
+</form>
+</div>
 
 {% endblock content %}
