@@ -16,7 +16,7 @@ def send(request, pk):
         send_mail(subj, body, message.sender, [message.receiver], fail_silently=False)
         # Possible errors raised here:
         #    ConnectionRefusedError
-        # 
+        #    SMTPServerDisconnected
         message.date = datetime.datetime.utcnow()
         message.save()
 

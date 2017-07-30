@@ -1,23 +1,28 @@
 from pytest_bdd import scenario, given, when, then
 from pytest_bdd import parsers
 from urllib.parse import urljoin
+import pytest
 
 # browser fixture comes from pytest-splinter
+# live_server fixture comes from pytest-django
+# @pytest.mark.django_db tells the tests that we intend to access the DB
 
 
+@pytest.mark.django_db
 @scenario('../features/calculate_season.feature', 'First form')
 def test_form1():
     pass
 
 
+@pytest.mark.django_db
 @scenario('../features/calculate_season.feature', 'Second form')
 def test_form2():
     pass
 
 
 @when('I go to the convert page')
-def go_to_convert(browser, base_url):
-    browser.visit(urljoin(base_url, '/convert/'))
+def go_to_convert(browser, live_server):
+    browser.visit(urljoin(str(live_server), '/convert/'))
 
 
 @when(parsers.parse('I fill out the name "{name}"'))
@@ -57,9 +62,9 @@ def see_seasonsets(browser, text):
 
 
 @given(parsers.parse('I have submitted the first form as follows:\n{text}'))
-def submitted_first_form(browser, base_url, text):
+def submitted_first_form(browser, live_server, text):
     items = dict([item.split(': ') for item in text.split('\n')])
-    go_to_convert(browser, base_url)
+    go_to_convert(browser, live_server)
     fill_out_name(browser, items['name'])
     fill_out_date(browser, items['day'], items['month'], items['year'])
     select_the_location(browser, items['lat'], items['lng'])
