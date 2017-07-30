@@ -1,8 +1,18 @@
 # Setup instructions
 
+## Windows? Install git for windows
+
+[Git for Windows download](https://git-for-windows.github.io/)
+
 ## Clone the git repo
 
-...
+Windows: Run git-bash and `git clone ...`
+
+Linux/Mac: In terminal, run `git clone ...`
+
+## Change directory
+
+`cd allseasons/allseasons`
 
 ## Install miniconda 
 
