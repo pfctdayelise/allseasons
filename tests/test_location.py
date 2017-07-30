@@ -12,21 +12,17 @@ def places():
             'buenos aires': (-34.603684, -58.381559),
             'melbourne': (-37.813628, 144.963058),
             'pontianak': (0.0, -109.20),
+            'mumbai': (19.0760, 72.8777),
+            'delhi': (28.7041, 77.1025),
+            'bangalore': (12.9716, 77.5946),
+            'hyderabad': (17.3850, 78.4867),
     }
 
 
 class TestLocation:
-    @pytest.mark.parametrize(('placename', 'expected'), [
-        ('london', 'northern'),
-        ('murmansk', 'northern'),
-        ('buenos aires', 'southern'),
-        ('melbourne', 'southern'),
-        ('pontianak', 'southern'),
-    ])
-    def test_hemisphere(self, places, placename, expected):
-        lat, lng = places[placename]
-        loc = location.Location(lat, lng)
-        assert loc.hemisphere == expected
+    """This class is just grouping the tests together,
+    to keep the structure parallel with the source class.
+    """
 
     def test_country_uk(self, places):
         lat, lng = places['london']
@@ -54,4 +50,14 @@ class TestLocation:
         loc = location.Location(lat, lng)
         assert loc.country == 'Indonesia'
 
-
+    @pytest.mark.parametrize(('placename', 'expected'), [
+        ('london', 'northern'),
+        ('murmansk', 'northern'),
+        ('buenos aires', 'southern'),
+        ('melbourne', 'southern'),
+        ('pontianak', 'southern'),
+    ])
+    def test_hemisphere(self, places, placename, expected):
+        lat, lng = places[placename]
+        loc = location.Location(lat, lng)
+        assert loc.hemisphere == expected
