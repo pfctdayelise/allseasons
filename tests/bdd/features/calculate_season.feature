@@ -9,8 +9,8 @@ Scenario: First form
     And I select the location as Latitude -37.8 Longitude 144.95
     And I submit the form
     Then I should see the following available calendars:
-        s meteorological
-        s astronomical
+        southern meteorological
+        southern astronomical
 
 
 Scenario: Second form
@@ -21,6 +21,6 @@ Scenario: Second form
         year: 2017
         lat: -37.8
         lng: 144.95
-    When I select the calendar "s astronomical"
+    When I select the calendar "southern astronomical"
     And I submit the form
-    Then I should see "The event of 19 March test, which occurred on 19 Mar 2017 at -37.8,144.95, according to the s astronomical calendar fell during the season of summer!" 
+    Then I should see "The event of 19 March test, which occurred on 19 Mar 2017 at -37.8,144.95, according to the southern astronomical calendar fell during the season of summer!" 

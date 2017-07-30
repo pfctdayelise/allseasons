@@ -82,21 +82,21 @@ class Calendar:
                 return season.name
 
 
-northern_meteo = Calendar('n meteorological', [
+northern_meteo = Calendar('northern meteorological', [
     Season('spring', lambda d: 3 <= d.month < 6),
     Season('summer', lambda d: 6 <= d.month < 9),
     Season('autumn', lambda d: 9 <= d.month < 12),
     Season('winter', lambda d: d.month == 12 or d.month < 3)],
     lambda loc: loc.hemisphere == 'northern')
 
-southern_meteo = Calendar('s meteorological', [
+southern_meteo = Calendar('southern meteorological', [
     Season('spring', lambda d: 9 <= d.month < 12),
     Season('summer', lambda d: d.month == 12 or d.month < 3),
     Season('autumn', lambda d: 3 <= d.month < 6),
     Season('winter', lambda d: 6 <= d.month < 9)],
     lambda loc: loc.hemisphere == 'southern')
 
-northern_astro = Calendar('n astronomical', [
+northern_astro = Calendar('northern astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'march', 'june')),
     Season('summer', lambda d: between_equinoxes(d, 'june', 'sept')),
     Season('autumn', lambda d: between_equinoxes(d, 'sept', 'dec')),
@@ -104,7 +104,7 @@ northern_astro = Calendar('n astronomical', [
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None))],
     lambda loc: loc.hemisphere == 'northern')
     
-southern_astro = Calendar('s astronomical', [
+southern_astro = Calendar('southern astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'sept', 'dec')),
     Season('summer',
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None)),
@@ -113,7 +113,7 @@ southern_astro = Calendar('s astronomical', [
     lambda loc: loc.hemisphere == 'southern')
 
 
-hindu_calendar = Calendar('Hindu calendar', [
+hindu = Calendar('Hindu', [
     Season('Vasanta', lambda d: between_dates(d, (3, 15), (5, 15))),
     Season('Greeshma', lambda d: between_dates(d, (5, 15), (7, 15))),
     Season('Varsha', lambda d: between_dates(d, (7, 15), (9, 15))),
@@ -129,7 +129,7 @@ calendars = (
     southern_meteo,
     northern_astro,
     southern_astro,
-    hindu_calendar,
+    hindu,
     )
 
 

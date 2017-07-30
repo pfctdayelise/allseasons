@@ -80,6 +80,7 @@ class TestCalendar:
         (LONDON, seasons.northern_astro, True),
         (LONDON, seasons.southern_meteo, False),
         (LONDON, seasons.southern_meteo, False),
+        (LONDON, seasons.hindu, False),
     ])
     def test_valid_for(self, loc, calendar, expected):
         location = seasons.Location(*loc)
