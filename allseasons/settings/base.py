@@ -16,7 +16,7 @@ SECRET_KEY = 'CHANGE THIS!!!'
 DEBUG = True
 IN_TESTING = sys.argv[1:2] == ['test']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.pythonanywhere.com']
 
 # Application definition
 
