@@ -1,0 +1,12 @@
+/*! project specific CSS goes here. */
+
+.content {
+    width: 600px;
+}
+
+#result {
+    border: 10px gray solid;
+    padding: 20px;
+    margin: 20px;
+    font-size: 200%;
+}
