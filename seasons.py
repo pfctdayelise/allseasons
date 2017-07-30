@@ -77,8 +77,6 @@ def astronomical_dates(year):
 
 def between_equinoxes(ddate, first_date, second_date):
     eqxs = astronomical_dates(ddate.year)
-    print('eqxs=', eqxs)
-    print('type=', type(ddate))
     c1 = eqxs[first_date] <= ddate if first_date else True
     c2 = ddate < eqxs[second_date] if second_date else True
     return c1 and c2
