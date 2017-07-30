@@ -1,7 +1,9 @@
 Django==1.11.2
+EasyProcess==0.2.3
 Jinja2==2.9.6
 Mako==1.0.7
 MarkupSafe==1.0
+PyVirtualDisplay==0.2.1
 arrow==0.10.0
 binaryornot==0.4.3
 chardet==3.0.4
@@ -29,6 +31,7 @@ pytest==3.0.7
 pytest-bdd==2.18.2
 pytest-django==3.1.2
 pytest-splinter==1.8.5
+pytest-xvfb==1.0.0
 python-dateutil==2.6.0
 pytz==2017.2
 ratelim==0.1.6
