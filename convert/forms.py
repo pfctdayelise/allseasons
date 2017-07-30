@@ -6,7 +6,7 @@ from .models import EventOfInterest, Message
 class EventForm(forms.ModelForm):
     class Meta:
         model = EventOfInterest
-        fields = ('name', 'date', 'location', 'seasonset')
+        fields = ('name', 'date', 'location', 'calendar')
 
 
 class EventForm1(forms.ModelForm):
@@ -21,16 +21,16 @@ class EventForm1(forms.ModelForm):
 class EventForm2(forms.ModelForm):
     class Meta:
         model = EventOfInterest
-        fields = ('seasonset', )
+        fields = ('calendar', )
         widgets = {
-            'seasonset': forms.RadioSelect,
+            'calendar': forms.RadioSelect,
         }
 
 
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ('sender', 'receiver', 'mtype')
+        fields = ('sender', 'receiver', 'message_type')
         widgets = {
             'mtype': forms.RadioSelect,
         }

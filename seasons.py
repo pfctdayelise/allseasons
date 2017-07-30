@@ -1,69 +1,8 @@
 #!/usr/bin/env python
 
 import ephem
-import geocoder
-from functools import partial
-from ratelimit import NomatimRateLimitCache
 from datetime import date, datetime
-
-
-location_cache = NomatimRateLimitCache(partial(geocoder.osm, method='reverse'))
-
-
-class Location:
-    def __init__(self, lat, lng):
-        self.lat = lat
-        self.lng = lng
-
-    @property
-    def hemisphere(self):
-        if self.lat > 0:
-            return "northern"
-        return "southern"
-
-    @property
-    def country(self):
-        g = location_cache(self.lat, self.lng)
-        translations = {
-            'РФ': 'Russian Federation',
-        }
-        return translations.get(g.country, g.country)
-
-
-class Season:
-    def __init__(self, name, valid_for_date):
-        """
-        @param name: a descriptive name for the season
-        @param valid_for_date: a function, datetime => Boolean
-        """
-        self.name = name
-        self.valid_for = valid_for_date
-
-    def __str__(self):
-        return 'Season({})'.format(self.name)
-
-
-class Seasonset:
-    def __init__(self, name, seasons, valid_for_loc):
-        """
-        @param name: a descriptive name for this set of seasons
-        @param seasons: a list of Season objects
-        @param valid_for_loc: a function, ?location => Boolean
-        """
-        self.name = name
-        self.seasons = seasons
-        self.valid_for = valid_for_loc
-
-    def __str__(self):
-        return 'Seasonset({})'.format(self.name)
-
-    def __iter__(self):
-        return iter(self.seasons)
-
-    def get_season(self, ddate):
-        for season in self:
-            if season.valid_for(ddate):
-                return season.name
+from location import Location
 
 
 def astronomical_dates(year):
@@ -90,27 +29,74 @@ def between_dates(ddate, start, end):
     @return: Boolean
 
     example: (3, 15) represents the 15th March
+
+    >>> between_dates(date(2017, 3, 15), (3, 1), (3, 20))
+    True
+    >>> between_dates(date(2017, 3, 15), (3, 15), (3, 16))
+    True
+    >>> between_dates(date(2017, 3, 15), (3, 14), (3, 15))
+    False
+    >>> between_dates(date(2017, 3, 15), (3, 15), None)
+    True
+    >>> between_dates(date(2017, 3, 15), None, (3, 16))
+    True
     '''
     c1 = date(ddate.year, *start) <= ddate if start else True
     c2 = ddate < date(ddate.year, *end) if end else True
     return c1 and c2
 
 
-northern_meteo = Seasonset('n meteorological', [
+class Season:
+    def __init__(self, name, valid_for_date):
+        """
+        @param name: a descriptive name for the season
+        @param valid_for_date: a function, datetime => Boolean
+        """
+        self.name = name
+        self.valid_for = valid_for_date
+
+    def __str__(self):
+        return 'Season({})'.format(self.name)
+
+
+class Calendar:
+    def __init__(self, name, seasons, valid_for_loc):
+        """
+        @param name: a descriptive name for this set of seasons
+        @param seasons: a list of Season objects
+        @param valid_for_loc: a function, ?location => Boolean
+        """
+        self.name = name
+        self.seasons = seasons
+        self.valid_for = valid_for_loc
+
+    def __str__(self):
+        return 'Calendar({})'.format(self.name)
+
+    def __iter__(self):
+        return iter(self.seasons)
+
+    def get_season(self, ddate):
+        for season in self:
+            if season.valid_for(ddate):
+                return season.name
+
+
+northern_meteo = Calendar('n meteorological', [
     Season('spring', lambda d: 3 <= d.month < 6),
     Season('summer', lambda d: 6 <= d.month < 9),
     Season('autumn', lambda d: 9 <= d.month < 12),
     Season('winter', lambda d: d.month == 12 or d.month < 3)],
     lambda loc: loc.hemisphere == 'northern')
 
-southern_meteo = Seasonset('s meteorological', [
+southern_meteo = Calendar('s meteorological', [
     Season('spring', lambda d: 9 <= d.month < 12),
     Season('summer', lambda d: d.month == 12 or d.month < 3),
     Season('autumn', lambda d: 3 <= d.month < 6),
     Season('winter', lambda d: 6 <= d.month < 9)],
     lambda loc: loc.hemisphere == 'southern')
 
-northern_astro = Seasonset('n astronomical', [
+northern_astro = Calendar('n astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'march', 'june')),
     Season('summer', lambda d: between_equinoxes(d, 'june', 'sept')),
     Season('autumn', lambda d: between_equinoxes(d, 'sept', 'dec')),
@@ -118,7 +104,7 @@ northern_astro = Seasonset('n astronomical', [
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None))],
     lambda loc: loc.hemisphere == 'northern')
     
-southern_astro = Seasonset('s astronomical', [
+southern_astro = Calendar('s astronomical', [
     Season('spring', lambda d: between_equinoxes(d, 'sept', 'dec')),
     Season('summer',
            lambda d: between_equinoxes(d, None, 'march') or between_equinoxes(d, 'dec', None)),
@@ -127,7 +113,7 @@ southern_astro = Seasonset('s astronomical', [
     lambda loc: loc.hemisphere == 'southern')
 
 
-hindu_calendar = Seasonset('Hindu calendar', [
+hindu_calendar = Calendar('Hindu calendar', [
     Season('Vasanta', lambda d: between_dates(d, (3, 15), (5, 15))),
     Season('Greeshma', lambda d: between_dates(d, (5, 15), (7, 15))),
     Season('Varsha', lambda d: between_dates(d, (7, 15), (9, 15))),
@@ -138,7 +124,7 @@ hindu_calendar = Seasonset('Hindu calendar', [
                            lambda loc: loc.country == 'India')
 
 
-season_sets = (
+calendars = (
     northern_meteo,
     southern_meteo,
     northern_astro,
@@ -147,5 +133,5 @@ season_sets = (
     )
 
 
-def get_valid_seasonsets(location):
-    return [ss for ss in season_sets if ss.valid_for(location)]
+def get_valid_calendars(location):
+    return [c for c in calendars if c.valid_for(location)]

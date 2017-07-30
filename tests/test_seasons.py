@@ -9,79 +9,6 @@ MELBOURNE = (-37.813628, 144.963058)
 PONTIANAK = (0.0, -109.20)
 
 
-class TestLocation:
-    @pytest.mark.parametrize(('lat', 'lng', 'expected'), [
-        (*LONDON, 'northern'),
-        (*MURMANSK, 'northern'),
-        (*BUENOSAIRES, 'southern'),
-        (*MELBOURNE, 'southern'),
-        (*PONTIANAK, 'southern'),
-    ])
-    def test_hemisphere(self, lat, lng, expected):
-        loc = seasons.Location(lat, lng)
-        assert loc.hemisphere == expected
-
-    @pytest.mark.parametrize(('lat', 'lng', 'expected'), [
-        (*LONDON, 'UK'),
-        (*MURMANSK, 'Russian Federation'),
-        (*BUENOSAIRES, 'Argentina'),
-        (*MELBOURNE, 'Australia'),
-        (*PONTIANAK, None),  # seems rough
-    ])
-    def test_country(self, lat, lng, expected):
-        loc = seasons.Location(lat, lng)
-        assert loc.country == expected
-
-
-class TestSeason:
-    def test_valid_for(self):
-        """For southern_meteo, 3 july
-        """
-        july = datetime.date(1983, 7, 3)
-        result = {(s.name, s.valid_for(july))
-                   for s in seasons.southern_meteo.seasons}
-        expected = {('spring', False),
-                    ('summer', False),
-                    ('autumn', False),
-                    ('winter', True)
-        }
-        assert result == expected
-
-
-class TestSeasonset:
-    @pytest.mark.parametrize(('seasonset', 'expected'), [
-        (seasons.northern_meteo, 'summer'),
-        (seasons.northern_astro, 'summer'),
-        (seasons.southern_meteo, 'winter'),
-        (seasons.southern_astro, 'winter'),
-    ])
-    def test_get_season_3_july(self, seasonset, expected):
-        date = datetime.date(1983, 7, 3)
-        assert seasonset.get_season(date) == expected
-
-    @pytest.mark.parametrize(('seasonset', 'expected'), [
-        (seasons.northern_meteo, 'spring'),
-        (seasons.northern_astro, 'winter'),
-        (seasons.southern_meteo, 'autumn'),
-        (seasons.southern_astro, 'summer'),
-    ])
-    def test_get_season_19_march(self, seasonset, expected):
-        """This date falls between the astronomical and meteorological seasons
-        """
-        date = datetime.date(2017, 3, 19)
-        assert seasonset.get_season(date) == expected
-
-    @pytest.mark.parametrize(('loc', 'seasonset', 'expected'), [
-        (LONDON, seasons.northern_meteo, True),
-        (LONDON, seasons.northern_astro, True),
-        (LONDON, seasons.southern_meteo, False),
-        (LONDON, seasons.southern_meteo, False),
-    ])
-    def test_valid_for(self, loc, seasonset, expected):
-        location = seasons.Location(*loc)
-        assert seasonset.valid_for(location) == expected
-
-
 def test_astronomical_dates():
     result = seasons.astronomical_dates(2017)
     expected = {'dec': datetime.date(2017, 12, 21),
@@ -110,9 +37,52 @@ def test_between_equinoxes():
     assert not seasons.between_equinoxes(july, 'dec', None)
 
 
-def test_between_dates():
-    july = datetime.date(2017, 7, 3)
-    assert seasons.between_dates(july, (7, 3), (7, 4))
-    assert not seasons.between_dates(july, (7, 2), (7, 3))
-    assert seasons.between_dates(july, (7, 3), None)
-    assert seasons.between_dates(july, None, (7, 4))
+class TestSeason:
+    def test_valid_for(self):
+        """For southern_meteo, 3 july
+        """
+        july = datetime.date(1983, 7, 3)
+        result = {(s.name, s.valid_for(july))
+                   for s in seasons.southern_meteo.seasons}
+        expected = {('spring', False),
+                    ('summer', False),
+                    ('autumn', False),
+                    ('winter', True)
+        }
+        assert result == expected
+
+
+class TestCalendar:
+    @pytest.mark.parametrize(('calendar', 'expected'), [
+        (seasons.northern_meteo, 'summer'),
+        (seasons.northern_astro, 'summer'),
+        (seasons.southern_meteo, 'winter'),
+        (seasons.southern_astro, 'winter'),
+    ])
+    def test_get_season_3_july(self, calendar, expected):
+        date = datetime.date(1983, 7, 3)
+        assert calendar.get_season(date) == expected
+
+    @pytest.mark.parametrize(('calendar', 'expected'), [
+        (seasons.northern_meteo, 'spring'),
+        (seasons.northern_astro, 'winter'),
+        (seasons.southern_meteo, 'autumn'),
+        (seasons.southern_astro, 'summer'),
+    ])
+    def test_get_season_19_march(self, calendar, expected):
+        """This date falls between the astronomical and meteorological seasons
+        """
+        date = datetime.date(2017, 3, 19)
+        assert calendar.get_season(date) == expected
+
+    @pytest.mark.parametrize(('loc', 'calendar', 'expected'), [
+        (LONDON, seasons.northern_meteo, True),
+        (LONDON, seasons.northern_astro, True),
+        (LONDON, seasons.southern_meteo, False),
+        (LONDON, seasons.southern_meteo, False),
+    ])
+    def test_valid_for(self, loc, calendar, expected):
+        location = seasons.Location(*loc)
+        assert calendar.valid_for(location) == expected
+
+

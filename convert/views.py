@@ -2,6 +2,7 @@ import datetime
 from formtools.wizard.views import SessionWizardView
 from django import forms
 import seasons
+import location
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EventForm, EventForm1, EventForm2, MessageForm
 from .models import EventOfInterest, Message
@@ -50,11 +51,11 @@ class EventWizard(SessionWizardView):
             step = self.steps.current
 
         if step == '1':
-            location = self.get_cleaned_data_for_step('0')['location']
-            ssets = seasons.get_valid_seasonsets(seasons.Location(*location))
-            choices = [(ss.name, ss.name) for ss in ssets]
-            form.fields['seasonset'] = forms.ChoiceField(choices=choices,
-                                                         widget=forms.RadioSelect)
+            latlng = self.get_cleaned_data_for_step('0')['location']
+            calendars = seasons.get_valid_calendars(location.Location(*latlng))
+            choices = [(c.name, c.name) for c in calendars]
+            form.fields['calendar'] = forms.ChoiceField(choices=choices,
+                                                        widget=forms.RadioSelect)
 
         return form
 

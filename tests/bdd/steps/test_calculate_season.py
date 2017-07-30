@@ -54,8 +54,8 @@ def submit_form(browser):
     browser.find_by_css('button[type=submit]').first.click()
 
 
-@then(parsers.parse('I should see the following available season sets:\n{text}'))
-def see_seasonsets(browser, text):
+@then(parsers.parse('I should see the following available calendars:\n{text}'))
+def see_calendars(browser, text):
     expected = text.split('\n')
     elements = [el.text for el in browser.find_by_css('.radio')]
     assert elements == expected
@@ -71,9 +71,9 @@ def submitted_first_form(browser, live_server, text):
     submit_form(browser)
 
 
-@when(parsers.parse('I select the season set "{seasonset}"'))
-def select_the_seasonset(browser, seasonset):
-    browser.choose('1-seasonset', seasonset)
+@when(parsers.parse('I select the calendar "{calendar}"'))
+def select_the_seasonset(browser, calendar):
+    browser.choose('1-calendar', calendar)
 
 
 @then(parsers.parse('I should see "{expected}"'))
