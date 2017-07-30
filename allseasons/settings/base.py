@@ -16,7 +16,7 @@ SECRET_KEY = 'CHANGE THIS!!!'
 DEBUG = True
 IN_TESTING = sys.argv[1:2] == ['test']
 
-ALLOWED_HOSTS = ['.pythonanywhere.com']
+ALLOWED_HOSTS = ['.pythonanywhere.com', 'localhost']
 
 # Application definition
 
@@ -138,6 +138,27 @@ EMAIL_HOST_USER = 'sendgrid_username'
 EMAIL_HOST_PASSWORD = 'sendgrid_password'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': root('../allseasons.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 
 
 # .local.py overrides all the common settings.

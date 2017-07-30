@@ -9,8 +9,17 @@
 
 <h1>Message</h1>
 
-<div id="message-sent">
-Was the message sent?!
+<div class="send-result">
+{% if error %}
+<div class="alert alert-danger">
+  <strong>Error!</strong> {{ error }}
 </div>
+{% else %}
+<div class="alert alert-success">
+  <strong>Success!</strong> The message was successfully sent.
+</div>
+{% endif %}
+</div>
+
 
 {% endblock content %}

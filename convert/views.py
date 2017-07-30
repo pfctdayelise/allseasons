@@ -3,25 +3,23 @@ from formtools.wizard.views import SessionWizardView
 from django import forms
 import seasons
 import location
+from lib import external_services
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EventForm, EventForm1, EventForm2, MessageForm
 from .models import EventOfInterest, Message
-from django.core.mail import send_mail
 
 
 def send(request, pk):
     message = get_object_or_404(Message, pk=pk)
-    if message.mtype == 'email':
+    if message.message_type == 'email':
         subj = 'Some important season information!'
         body = message.event.format_plaintext()
-        send_mail(subj, body, message.sender, [message.receiver], fail_silently=False)
-        # Possible errors raised here:
-        #    ConnectionRefusedError
-        #    SMTPServerDisconnected
-        message.date = datetime.datetime.utcnow()
-        message.save()
-
-    return render(request, 'send.html', {'message': message})
+        error = external_services.send_mail_safely(subj, body, message.sender,
+                                                   message.receiver)
+        if not error:
+            message.date = datetime.datetime.utcnow()
+            message.save()
+    return render(request, 'send.html', {'message': message, 'error': error})
 
 
 def result(request, pk):
