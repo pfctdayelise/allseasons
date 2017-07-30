@@ -59,7 +59,7 @@ WSGI_APPLICATION = 'allseasons.wsgi.application'
 DATABASES = {
     'default': { 
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'allseasons.db',
+        'NAME': root('../allseasons.db'),
     }
 }
 
