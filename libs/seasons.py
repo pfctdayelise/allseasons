@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import ephem
 from datetime import date, datetime
-from location import Location
+from libs import ephem
+from libs.location import Location
 
 
 def astronomical_dates(year):

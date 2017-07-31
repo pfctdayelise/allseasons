@@ -1,5 +1,5 @@
 import pytest
-import location
+from libs import location
 
 
 places = {'london': (51.507351, -0.127758),

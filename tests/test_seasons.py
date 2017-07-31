@@ -1,4 +1,4 @@
-import seasons
+from libs import seasons
 import pytest
 import datetime
 

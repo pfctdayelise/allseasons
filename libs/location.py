@@ -1,4 +1,4 @@
-from ratelimit import NomatimRateLimitCache
+from libs.ratelimit import NomatimRateLimitCache
 from libs.external_services import get_address_from_latlng
 
 location_cache = NomatimRateLimitCache(get_address_from_latlng)

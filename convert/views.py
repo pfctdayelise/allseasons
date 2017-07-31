@@ -1,8 +1,8 @@
 import datetime
 from formtools.wizard.views import SessionWizardView
 from django import forms
-import seasons
-import location
+from libs import seasons
+from libs import location
 from libs import external_services
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EventForm, EventForm1, EventForm2, MessageForm

@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from geoposition.fields import GeopositionField
-import seasons
+from libs import seasons
 
 default_date = datetime.date(2000, 7, 15)
 
