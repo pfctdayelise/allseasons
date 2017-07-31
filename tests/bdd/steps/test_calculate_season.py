@@ -2,10 +2,15 @@ from pytest_bdd import scenario, given, when, then
 from pytest_bdd import parsers
 from urllib.parse import urljoin
 import pytest
+import sys
 
 # browser fixture comes from pytest-splinter
 # live_server fixture comes from pytest-django
+# pytestmark means it this mark will apply to all tests in the module
 # @pytest.mark.django_db tells the tests that we intend to access the DB
+
+pytestmark = pytest.mark.skipif(sys.platform in ('win32', 'cygwin', 'darwin'),
+                                reason="firefox tests don't work in Windows/OSX")
 
 
 @pytest.mark.django_db

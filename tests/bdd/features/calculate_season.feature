@@ -23,4 +23,4 @@ Scenario: Second form
         lng: 144.95
     When I select the calendar "southern astronomical"
     And I submit the form
-    Then I should see "The event of 19 March test, which occurred on 19 Mar 2017 at -37.8,144.95, according to the southern astronomical calendar fell during the season of summer!" 
+    Then I should see "The event of 19 March test, which occurred on 2017-03-19 at -37.8,144.95, according to the southern astronomical calendar fell during the season of summer!" 
