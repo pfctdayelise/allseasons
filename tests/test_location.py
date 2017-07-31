@@ -19,27 +19,32 @@ class TestLocation:
     to keep the structure parallel with the source class.
     """
 
+    @pytest.mark.external
     def test_country_uk(self):
         lat, lng = places['london']
         loc = location.Location(lat, lng)
         assert loc.country == 'UK'
 
+    @pytest.mark.external
     def test_country_russia(self):
         lat, lng = places['murmansk']
         loc = location.Location(lat, lng)
         assert loc.country == 'Russian Federation'
 
+    @pytest.mark.external
     def test_country_argentina(self):
         lat, lng = places['buenos aires']
         loc = location.Location(lat, lng)
         assert loc.country == 'Argentina'
 
+    @pytest.mark.external
     def test_country_australia(self):
         lat, lng = places['melbourne']
         loc = location.Location(lat, lng)
         assert loc.country == 'Australia'
 
-    @pytest.mark.xfail(reason="Not sure why this fails")
+    @pytest.mark.xfail(reason="Not sure why this fails, can you figure out why?")
+    @pytest.mark.external
     def test_country_indonesia(self):
         lat, lng = 'pontianak'
         loc = location.Location(lat, lng)

@@ -17,7 +17,7 @@ class NomatimRateLimitCache:
         since_last_call = time.time() - self.last_call
         if since_last_call < 1:
             time.sleep(since_last_call)
-        result = self.method(args)
+        result = self.method(*args)
         self.cache[args] = result
         self.last_call = time.time()
         return result

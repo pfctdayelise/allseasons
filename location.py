@@ -1,8 +1,7 @@
-from functools import partial
-import geocoder
 from ratelimit import NomatimRateLimitCache
+from libs.external_services import get_address_from_latlng
 
-location_cache = NomatimRateLimitCache(partial(geocoder.osm, method='reverse'))
+location_cache = NomatimRateLimitCache(get_address_from_latlng)
 
 
 class Location:
@@ -25,3 +24,5 @@ class Location:
         return translations.get(g.country, g.country)
 
 
+
+    
