@@ -32,5 +32,5 @@ class MessageForm(forms.ModelForm):
         model = Message
         fields = ('sender', 'receiver', 'message_type')
         widgets = {
-            'mtype': forms.RadioSelect,
+            'message_type': forms.RadioSelect,
         }
