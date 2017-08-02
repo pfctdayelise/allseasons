@@ -1,1 +1,1 @@
-conda_alias remove --yes --name allseasons --all
+conda remove --yes --name allseasons --all
