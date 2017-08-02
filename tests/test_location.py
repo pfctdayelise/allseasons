@@ -50,11 +50,19 @@ class TestLocation:
         loc = location.Location(lat, lng)
         assert loc.country == 'Indonesia'
 
+
+
+    def test_hemisphere_melbourne(self):
+        lat, lng = places['melbourne']
+        loc = location.Location(lat, lng)
+        assert loc.hemisphere == 'northern'
+
+
+
     @pytest.mark.parametrize(('placename', 'expected'), [
         ('london', 'northern'),
         ('murmansk', 'northern'),
         ('buenos aires', 'southern'),
-        ('melbourne', 'southern'),
         ('pontianak', 'southern'),
     ])
     def test_hemisphere(self, placename, expected):
