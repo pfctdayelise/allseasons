@@ -8,6 +8,28 @@ import socket
 logger = logging.getLogger(__name__)
 
 
+class NoLocation:
+    def __init__(self):
+        self.country = False
+
+
+def get_address_from_latlng_unsafe(lat, lng):
+    """Exceptions, what exceptions?!
+    """
+    g = geocoder.osm([lat, lng], method='reverse')
+    return g
+
+
+def get_address_from_latlng(lat, lng):
+    try:
+        g = geocoder.osm([lat, lng], method='reverse')
+        logger.info('get_address_from_latlng: successfully looked up 1 latlng')
+    except requests.exceptions.RequestException as ex:
+        g = NoLocation()
+        logger.exception('get_address_from_latlng got a RequestException')
+    return g
+
+
 def send_mail_safely(subject, body, sender, receiver):
     error = None
     try:
@@ -24,18 +46,4 @@ def send_mail_safely(subject, body, sender, receiver):
         logger.exception('send_mail_safely')
     return error
 
-
-class NoLocation:
-    def __init__(self):
-        self.country = False
-
-
-def get_address_from_latlng(lat, lng):
-    try:
-        g = geocoder.osm([lat, lng], method='reverse')
-        logger.info('get_address_from_latlng: successfully looked up 1 latlng')
-    except requests.exceptions.RequestException as ex:
-        g = NoLocation()
-        logger.exception('get_address_from_latlng got a RequestException')
-    return g
 
