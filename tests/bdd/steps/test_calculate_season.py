@@ -4,14 +4,13 @@ from urllib.parse import urljoin
 import pytest
 import sys
 
-# browser fixture comes from pytest-splinter
-# live_server fixture comes from pytest-django
 # pytestmark means it this mark will apply to all tests in the module
-# @pytest.mark.django_db tells the tests that we intend to access the DB
 
 pytestmark = pytest.mark.skipif(sys.platform in ('win32', 'cygwin', 'darwin'),
                                 reason="firefox tests don't work in Windows/OSX")
 
+
+# @pytest.mark.django_db tells the tests that we intend to access the DB
 
 @pytest.mark.django_db
 @scenario('../features/calculate_season.feature', 'First form')
@@ -24,6 +23,9 @@ def test_form1():
 def test_form2():
     pass
 
+
+# browser fixture comes from pytest-splinter
+# live_server fixture comes from pytest-django
 
 @when('I go to the convert page')
 def go_to_convert(browser, live_server):
