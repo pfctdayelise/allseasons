@@ -33,9 +33,8 @@ dependencies:
   - pbr=3.0.1
   - poyo=0.4.1
   - psycopg2=2.7.1
-  - py==1.4.33
-  - pip:
-    - git+https://github.com/brandon-rhodes/pyephem.git#egg=pyephem[complete]
+  - py=1.4.33
+  - pytest-catchlog=1.2.2
   - pytest=3.0.7
   - pip:
     - git+https://github.com/pytest-dev/pytest-bdd.git#egg=pytest-bdd=2.18.2
@@ -49,3 +48,4 @@ dependencies:
   - pip:
     - git+https://github.com/cobrateam/splinter.git#egg=splinter
   - whichcraft=0.4.1
+  - pyvirtualdisplay=0.2.1
